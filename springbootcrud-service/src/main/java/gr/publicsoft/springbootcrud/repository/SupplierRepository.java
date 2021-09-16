@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public interface SupplierRepository extends JpaRepository<Supplier, Long>{
 
     Supplier findByCompanyName(String companyName);
-
+    Supplier save(Supplier supplier);
 
     @Query(value = "SELECT s FROM Supplier s "
             + "WHERE s.companyName LIKE CONCAT('%',?1,'%') "
