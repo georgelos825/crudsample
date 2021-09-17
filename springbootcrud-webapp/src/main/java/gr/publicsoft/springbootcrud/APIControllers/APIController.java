@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 
@@ -21,9 +22,26 @@ public class APIController {
 
 
 
+
+    @GetMapping(value="/suppliers")
+    public List<Supplier> getAllSuppliers (){
+        return supplierRepository.findAll();
+    }
+
     @GetMapping(value = "/getSuppliers{vatNum}")
-    public ResponseEntity<Supplier> getRequestedSupplier (HttpServletRequest httpServletRequest, @PathVariable String vatNum, @RequestParam(required = false, defaultValue = "") String companyName) throws IOException {
-           Supplier supplier=supplierRepository.findByVatNumberOrCompanyName(vatNum,companyName);
+    public ResponseEntity<Supplier> getRequestedSupplierbyVat (HttpServletRequest httpServletRequest, @PathVariable String vatNum, @RequestParam(required = false, defaultValue = "") String companyName) throws IOException {
+        Supplier supplier=supplierRepository.findByVatNumberOrCompanyName(companyName,vatNum);
+        if(supplier==null){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(supplier);
+    }
+
+
+
+    @GetMapping(value = "/getSuppliers{compName}")
+    public ResponseEntity<Supplier> getRequestedSupplierByCompName (HttpServletRequest httpServletRequest, @PathVariable String compName, @RequestParam(required = false, defaultValue = "") String vatNum) throws IOException {
+           Supplier supplier=supplierRepository.findByVatNumberOrCompanyName(compName,vatNum);
            if(supplier==null){
                return new ResponseEntity(HttpStatus.NOT_FOUND);
            }
